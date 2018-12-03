@@ -1,0 +1,137 @@
+---
+title: "A Grammar of Omics Data Manipulation"
+subtitle: "A tale of two cultures"
+author: "[Laurent Gatto](#laurent-gatto)"
+date: "2018/01/01"
+output:
+  xaringan::moon_reader:
+    css: ["default", "default-fonts", "my.css"]
+    nature:
+     highlightStyle: github
+     highlightLines: true
+     countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+class: middle
+name: cc-by
+
+### Get the slides at [short URL]().
+
+These slides are available under a **creative common
+[CC-BY license](http://creativecommons.org/licenses/by/4.0/)**. You are
+free to share (copy and redistribute the material in any medium or
+format) and adapt (remix, transform, and build upon the material) for
+any purpose, even commercially
+<img height="20px" alt="CC-BY" src="./img/cc1.jpg" />.
+
+
+---
+class: middle, center, inverse
+
+## Motivation
+
+
+---
+class: middle
+
+## A tale of two cultures
+
+There are numerous complementary views about
+- Object-oriented programming (`S3` vs `S4`; `S4` vs `R5` vs `R6`),
+- Visualisation (base vs `lattice` vs `ggplot2`)
+- Data analysis (base vs `tidyverse`)
+- ...
+
+---
+class: middle, center
+
+![richierocks tweet 1](./figs/tweet_richierocks1.png)
+
+---
+class: middle, center, inverse
+
+## The goal is to ...
+
+---
+class: middle
+
+## Use a Bioconductor object in all its glory with the tidyverse tools.
+
+(without *explicitly* converting it from/to a tibble)
+
+---
+class: middle, center
+
+![richierocks tweet 2](./figs/tweet_richierocks2.png)
+
+
+---
+class: middle
+
+This talk is about
+
+> *tidy data analysis for eSet-type objects* using the `tidies` package
+
+But see also
+
+- [`plyranges`](http://bioconductor.org/packages/release/bioc/html/plyranges.html)
+- [`Organism.dplyr`](http://bioconductor.org/packages/release/bioc/html/Organism.dplyr.html)
+- and probably more ...
+
+
+---
+class: middle, center, inverse
+
+## How to
+
+
+---
+class: middle
+
+Explicitly coercing ... (see vignette).
+
+
+---
+class: middle, center, inverse
+
+## The `tidies` package
+
+
+---
+class: middle
+
+Implicitly coercing ... (see vignette).
+
+---
+class: middle
+name: laurent-gatto
+
+.left-col-50[
+<img src="./img/lgatto3b.png" width = "180px"/>
+### Laurent Gatto
+<i class="fas fa-flask"></i>&nbsp;[Computational Biology Group](https://lgatto.github.io/cbio-lab/)<br />
+<i class="fas fa-map-marker-alt"></i>&nbsp;de Duve Institute, UCLouvain<br />
+<i class="fas fa-envelope"></i>&nbsp;laurent.gatto@uclouvain.be<br />
+<i class="fas fa-home"></i>&nbsp;https://lgatto.github.io<br />
+<i class="fab fa-twitter"></i>&nbsp;[@lgatto](https://twitter.com/lgatt0/)<br />
+<i class="fab fa-github"></i>&nbsp;[lgatto](https://github.com/lgatto/)<br />
+<img width="20px" align="top" alt="orcid" src="./img/orcid_64x64.png" />&nbsp;[0000-0002-1520-2268](https://orcid.org/0000-0002-1520-2268)<br />
+<img width="20px" align="top" alt="Impact story" src="./img/keybase.png"/>&nbsp;[lgatto](https://keybase.io/lgatto)<br />
+<img width="20px" align="top" alt="Google scholar" src="./img/gscholar.png"/>&nbsp;[Google scholar](https://scholar.google.co.uk/citations?user=k5DrB74AAAAJ&hl=en)<br />
+<img width="20px" align="top" alt="Impact story" src="./img/impactstory-logo.png"/>&nbsp;[Impact story](https://profiles.impactstory.org/u/0000-0002-1520-2268)<br />
+<i class="fas fa-pencil-alt"></i>&nbsp;[dissem.in](https://dissem.in/r/6231/laurent-gatto)<br />
+<!-- <i class="fab fa-linkedin"></i>&nbsp;https://www.linkedin.com/in/lgatto/<br /> -->
+]
+
+.rigth-col-50[
+
+**Acknowledgements**: ...
+
+## Thank you for your attention
+
+### Find the slides [online](https://rawgit.com/lgatto/slide-templates/master/my_template.html).
+]
