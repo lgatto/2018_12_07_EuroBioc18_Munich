@@ -61,7 +61,7 @@ class: middle
 
 ## Use a Bioconductor object in all its glory with the tidyverse tools.
 
-(without *explicitly* converting it from/to a tibble)
+(without *explicitly/manually* converting it from/to a tibble)
 
 ---
 class: middle, center
