@@ -209,17 +209,17 @@ msnset %>%
     select(starts_with("Prot"))
 ```
 
----
-class: middle
+<!-- --- -->
+<!-- class: middle -->
 
 
-## Ordering
+<!-- ## Ordering -->
 
-```{r order}
-msnset %>%
-    arrange(desc(group)) %>%
-    pData
-```
+<!-- ```{r order} -->
+<!-- msnset %>% -->
+<!--     arrange(desc(group)) %>% -->
+<!--     pData -->
+<!-- ``` -->
 
 ---
 
@@ -301,6 +301,18 @@ msnset %>%
     summarise(mean(exprs)) %>%
     filter(ProteinAccession %in% c('ENO', 'BSA')) %>%
     exprs
+```
+
+---
+
+## Plotting
+
+```{r ggplot, message = FALSE, warning = FALSE, fig.width = 12, fig.height = 6}
+library("ggplot2")
+msnset %>% as_tibble %>%
+    mutate(rt = cut(retention.time, 7)) %>%
+    ggplot(aes(x = sample, y = exprs)) +
+    geom_boxplot() + facet_grid(charge ~ rt)
 ```
 
 ---

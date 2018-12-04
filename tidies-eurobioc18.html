@@ -382,26 +382,17 @@ msnset %&gt;%
 ##  MSnbase version: 1.1.22
 ```
 
----
-class: middle
+&lt;!-- --- --&gt;
+&lt;!-- class: middle --&gt;
 
 
-## Ordering
+&lt;!-- ## Ordering --&gt;
 
-
-```r
-msnset %&gt;%
-    arrange(desc(group)) %&gt;%
-    pData
-```
-
-```
-##               mz reporters group
-## iTRAQ4.116 116.1    iTRAQ4     B
-## iTRAQ4.117 117.1    iTRAQ4     B
-## iTRAQ4.114 114.1    iTRAQ4     A
-## iTRAQ4.115 115.1    iTRAQ4     A
-```
+&lt;!-- ```{r order} --&gt;
+&lt;!-- msnset %&gt;% --&gt;
+&lt;!--     arrange(desc(group)) %&gt;% --&gt;
+&lt;!--     pData --&gt;
+&lt;!-- ``` --&gt;
 
 ---
 
@@ -583,6 +574,21 @@ msnset %&gt;%
 ## BSA   2260.423  7695.216
 ## ENO 120931.768 31937.750
 ```
+
+---
+
+## Plotting
+
+
+```r
+library("ggplot2")
+msnset %&gt;% as_tibble %&gt;%
+    mutate(rt = cut(retention.time, 7)) %&gt;%
+    ggplot(aes(x = sample, y = exprs)) +
+    geom_boxplot() + facet_grid(charge ~ rt)
+```
+
+![](tidies-eurobioc18_files/figure-html/ggplot-1.png)&lt;!-- --&gt;
 
 ---
 class: middle
