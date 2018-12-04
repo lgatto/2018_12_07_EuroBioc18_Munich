@@ -49,7 +49,7 @@ There are numerous complementary views about
 ---
 class: middle, center
 
-![richierocks tweet 1](./figs/tweet_richierocks1.png)
+[![richierocks' tweet (1)](./figs/tweet_richierocks1.png)](https://twitter.com/richierocks/status/890241642334179329)
 
 ---
 class: middle, center, inverse
@@ -66,7 +66,7 @@ class: middle
 ---
 class: middle, center
 
-![richierocks tweet 2](./figs/tweet_richierocks2.png)
+[![richierocks' tweet (2)](./figs/tweet_richierocks2.png)](https://twitter.com/richierocks/status/854756507434573824)
 
 
 ---
@@ -80,6 +80,7 @@ But see also
 
 - [`plyranges`](http://bioconductor.org/packages/release/bioc/html/plyranges.html)
 - [`Organism.dplyr`](http://bioconductor.org/packages/release/bioc/html/Organism.dplyr.html)
+- [`biobroom`](https://www.bioconductor.org/packages/release/bioc/html/biobroom.html) (see later)
 - and probably more ...
 
 
