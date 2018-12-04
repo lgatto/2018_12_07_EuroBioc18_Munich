@@ -164,6 +164,8 @@ lmdf <- tidyr::gather(mdf, sample, exprs, -fv)
 tibble::as_tibble(lmdf)
 ```
 
+Given that this coercion is often useful, it is implemented in `as_tibble,MSnSet`.
+
 ---
 class: middle, center, inverse
 
