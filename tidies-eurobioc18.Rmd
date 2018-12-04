@@ -209,18 +209,6 @@ msnset %>%
     select(starts_with("Prot"))
 ```
 
-<!-- --- -->
-<!-- class: middle -->
-
-
-<!-- ## Ordering -->
-
-<!-- ```{r order} -->
-<!-- msnset %>% -->
-<!--     arrange(desc(group)) %>% -->
-<!--     pData -->
-<!-- ``` -->
-
 ---
 
 ## Filtering
@@ -266,6 +254,7 @@ msnset %>%
 ```
 
 ---
+
 ## Summarise
 
 ```{r summarise1}
