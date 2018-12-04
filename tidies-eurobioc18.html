@@ -522,9 +522,7 @@ msnset %&gt;%
 ```
 
 ---
-class: middle
-
-## Summarise (1)
+## Summarise
 
 
 ```r
@@ -532,7 +530,7 @@ msnset %&gt;%
     group_by(group) %&gt;%
     summarise(mean(exprs, na.rm = TRUE)) %&gt;%
     exprs %&gt;%
-    head
+    head(n = 3)
 ```
 
 ```
@@ -540,9 +538,25 @@ msnset %&gt;%
 ## X1   1797.4628  5794.4197
 ## X10   769.6681   826.6388
 ## X11 30516.1917 29366.5078
-## X12 32763.7954 37451.2196
-## X13 27910.6161 28495.8100
-## X14  6341.1393  6670.0603
+```
+
+--
+
+
+
+```r
+msnset %&gt;%
+    group_by(ProteinAccession) %&gt;%
+    summarise(max(exprs, na.rm = TRUE)) %&gt;%
+    exprs %&gt;%
+    head(n = 3)
+```
+
+```
+##         iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117
+## BSA       1593.436   2927.411   5028.292  10362.141
+## ECA0172  17593.548  18545.620  19361.837  18328.237
+## ECA0435   9339.079  10509.315  10824.739   9504.388
 ```
 
 ---
@@ -553,32 +567,9 @@ class: middle
 
 ```r
 msnset %&gt;%
+    filterNA() %&gt;%
     group_by(ProteinAccession) %&gt;%
-    summarise(max(exprs, na.rm = TRUE)) %&gt;%
-    exprs %&gt;%
-    head
-```
-
-```
-##         iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117
-## BSA       1593.436   2927.411   5028.292  10362.141
-## ECA0172  17593.548  18545.620  19361.837  18328.237
-## ECA0435   9339.079  10509.315  10824.739   9504.388
-## ECA0452   1524.148   1399.897   1547.218   1563.230
-## ECA0469   1157.487   1119.316   1178.141   1100.372
-## ECA0621   1101.062   1124.167   1140.093   1191.805
-```
-
----
-class: middle
-
-## Summarise (3)
-
-
-```r
-msnset %&gt;%
-    group_by(ProteinAccession) %&gt;%
-    summarise(max(exprs, na.rm = TRUE)) %&gt;%
+    summarise(max(exprs)) %&gt;%
     group_by(group) %&gt;%
     summarise(mean(exprs)) %&gt;%
     filter(ProteinAccession %in% c('ENO', 'BSA')) %&gt;%

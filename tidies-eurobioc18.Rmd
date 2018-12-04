@@ -264,16 +264,25 @@ msnset %>%
 ```
 
 ---
-class: middle
-
-## Summarise (1)
+## Summarise
 
 ```{r summarise1}
 msnset %>%
     group_by(group) %>%
     summarise(mean(exprs, na.rm = TRUE)) %>%
     exprs %>%
-    head
+    head(n = 3)
+```
+
+--
+
+
+```{r summarise2}
+msnset %>%
+    group_by(ProteinAccession) %>%
+    summarise(max(exprs, na.rm = TRUE)) %>%
+    exprs %>%
+    head(n = 3)
 ```
 
 ---
@@ -281,23 +290,11 @@ class: middle
 
 ## Summarise (2)
 
-```{r summarise2}
-msnset %>%
-    group_by(ProteinAccession) %>%
-    summarise(max(exprs, na.rm = TRUE)) %>%
-    exprs %>%
-    head
-```
-
----
-class: middle
-
-## Summarise (3)
-
 ```{r summarise3}
 msnset %>%
+    filterNA() %>%
     group_by(ProteinAccession) %>%
-    summarise(max(exprs, na.rm = TRUE)) %>%
+    summarise(max(exprs)) %>%
     group_by(group) %>%
     summarise(mean(exprs)) %>%
     filter(ProteinAccession %in% c('ENO', 'BSA')) %>%
