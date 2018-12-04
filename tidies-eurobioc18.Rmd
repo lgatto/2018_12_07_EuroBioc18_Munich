@@ -2,7 +2,7 @@
 title: "A Grammar of Omics Data Manipulation"
 subtitle: "A tale of two cultures"
 author: "[Laurent Gatto](#laurent-gatto)"
-date: "07 December 2018"
+date: "EuroBioc2018 &#8212; 07 December 2018"
 output:
   xaringan::moon_reader:
     css: ["default", "default-fonts", "my.css"]
@@ -136,7 +136,7 @@ msnset %>% fData %>% as_tibble
 ---
 class: middle
 
-## Using `biobroom` (sample metadata)
+## Using [biobroom](https://www.bioconductor.org/packages/release/bioc/html/biobroom.html) (sample metadata)
 
 ```{r biobroom, message = FALSE}
 library("biobroom")
@@ -167,19 +167,142 @@ tibble::as_tibble(lmdf)
 ---
 class: middle, center, inverse
 
-## The `tidies` package
+## The [tidies](https://lgatto.github.io/tidies/) package
 
-## Implicitly coercing ...
+???
+
+I would argue that none of the solutions demonstrated above are fully
+satisfactory. What we want is
+
+- Compose simple functions with the pipe; here we apply the widely
+  used `dplyr` functions and `magrittr` `%>%` operator.
+
+- Each of the adapted tidy function to use and return tidy `eSet`
+  data.
+
+---
+
+## Select variables
+
+```{r pselect, message = FALSE, warning = FALSE}
+library("tidies")
+msnset %>%
+    select(group) %>%
+    pData
+```
+
+--
+
+```{r fselect, message = FALSE, warning = FALSE}
+msnset %>%
+    select(starts_with("Protein")) %>%
+    fvarLabels
+```
+
+---
+
+```{r select}
+msnset %>%
+    select(group) %>%
+    select(starts_with("Prot"))
+```
 
 ---
 class: middle
 
-- Select feature or sample variables
-- Order data by it feature of sample variables
-- Return features and samples with matching conditions
-- Group by one or more feature or sample variables
-- Summarise the expression values of a dataset
-- Example with plotting
+
+## Ordering
+
+```{r order}
+msnset %>%
+    arrange(desc(group)) %>%
+    pData
+```
+
+---
+
+## Filtering
+
+```{r filter1}
+msnset %>%
+    filter(ProteinAccession == "BSA") %>% exprs
+```
+
+--
+
+```{r filter2}
+msnset %>%
+    filter(group == "A") %>% exprs %>% head(n = 3)
+```
+
+--
+
+```{r filter3}
+msnset %>%
+    filter(group == "A") %>%
+    filter(ProteinAccession == "BSA") %>% exprs
+```
+
+---
+class: middle
+
+## Grouping
+
+```{r grouping1}
+msnset %>%
+    group_by(ProteinAccession) %>% show
+```
+
+---
+class: middle
+
+```{r grouping2}
+msnset %>%
+    group_by(ProteinAccession) %>%
+    group_by(group) %>%
+    show
+```
+
+---
+class: middle
+
+## Summarise (1)
+
+```{r summarise1}
+msnset %>%
+    group_by(group) %>%
+    summarise(mean(exprs, na.rm = TRUE)) %>%
+    exprs %>%
+    head
+```
+
+---
+class: middle
+
+## Summarise (2)
+
+```{r summarise2}
+msnset %>%
+    group_by(ProteinAccession) %>%
+    summarise(max(exprs, na.rm = TRUE)) %>%
+    exprs %>%
+    head
+```
+
+---
+class: middle
+
+## Summarise (3)
+
+```{r summarise3}
+msnset %>%
+    group_by(ProteinAccession) %>%
+    summarise(max(exprs, na.rm = TRUE)) %>%
+    group_by(group) %>%
+    summarise(mean(exprs)) %>%
+    filter(ProteinAccession %in% c('ENO', 'BSA')) %>%
+    exprs
+```
 
 ---
 class: middle
@@ -216,9 +339,20 @@ name: laurent-gatto
 ([thomasp85](https://twitter.com/thomasp85/)) for early advice.
 
 
+
 ## Thank you for your attention
 
-### Find the slides [online](https://raw.githack.com/lgatto/2018_12_07_EuroBioc18_Munich/master/tidies-eurobioc18.html).
+<hr/>
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+### Slides <br/> &nbsp; [http://bit.ly/tidies-eurobioc18](https://raw.githack.com/lgatto/2018_12_07_EuroBioc18_Munich/master/tidies-eurobioc18.html)
 ]
 
 

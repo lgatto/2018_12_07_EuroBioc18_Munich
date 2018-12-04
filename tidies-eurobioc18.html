@@ -4,7 +4,6 @@
     <title>A Grammar of Omics Data Manipulation</title>
     <meta charset="utf-8">
     <meta name="author" content="Laurent Gatto" />
-    <meta name="date" content="2018-12-07" />
     <link href="tidies-eurobioc18_files/remark-css/default.css" rel="stylesheet" />
     <link href="tidies-eurobioc18_files/remark-css/default-fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="my.css" type="text/css" />
@@ -16,7 +15,7 @@ class: center, middle, inverse, title-slide
 # A Grammar of Omics Data Manipulation
 ## A tale of two cultures
 ### <a href="#laurent-gatto">Laurent Gatto</a>
-### 07 December 2018
+### EuroBioc2018 — 07 December 2018
 
 ---
 
@@ -212,7 +211,7 @@ msnset %&gt;% fData %&gt;% as_tibble
 ---
 class: middle
 
-## Using `biobroom` (sample metadata)
+## Using [biobroom](https://www.bioconductor.org/packages/release/bioc/html/biobroom.html) (sample metadata)
 
 
 ```r
@@ -305,19 +304,292 @@ tibble::as_tibble(lmdf)
 ---
 class: middle, center, inverse
 
-## The `tidies` package
+## The [tidies](https://lgatto.github.io/tidies/) package
 
-## Implicitly coercing ...
+???
+
+I would argue that none of the solutions demonstrated above are fully
+satisfactory. What we want is
+
+- Compose simple functions with the pipe; here we apply the widely
+  used `dplyr` functions and `magrittr` `%&gt;%` operator.
+
+- Each of the adapted tidy function to use and return tidy `eSet`
+  data.
+
+---
+
+## Select variables
+
+
+```r
+library("tidies")
+msnset %&gt;%
+    select(group) %&gt;%
+    pData
+```
+
+```
+##            group
+## iTRAQ4.114     A
+## iTRAQ4.115     A
+## iTRAQ4.116     B
+## iTRAQ4.117     B
+```
+
+--
+
+
+```r
+msnset %&gt;%
+    select(starts_with("Protein")) %&gt;%
+    fvarLabels
+```
+
+```
+## [1] "ProteinAccession"   "ProteinDescription"
+```
+
+---
+
+
+```r
+msnset %&gt;%
+    select(group) %&gt;%
+    select(starts_with("Prot"))
+```
+
+```
+## MSnSet (storageMode: lockedEnvironment)
+## assayData: 55 features, 4 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117
+##   varLabels: group
+##   varMetadata: labelDescription
+## featureData
+##   featureNames: X1 X10 ... X9 (55 total)
+##   fvarLabels: ProteinAccession ProteinDescription
+##   fvarMetadata: labelDescription
+## experimentData: use 'experimentData(object)'
+## Annotation: No annotation 
+## - - - Processing information - - -
+## Data loaded: Wed May 11 18:54:39 2011 
+## iTRAQ4 quantification by trapezoidation: Wed Apr  1 21:41:53 2015 
+##  MSnbase version: 1.1.22
+```
 
 ---
 class: middle
 
-- Select feature or sample variables
-- Order data by it feature of sample variables
-- Return features and samples with matching conditions
-- Group by one or more feature or sample variables
-- Summarise the expression values of a dataset
-- Example with plotting
+
+## Ordering
+
+
+```r
+msnset %&gt;%
+    arrange(desc(group)) %&gt;%
+    pData
+```
+
+```
+##               mz reporters group
+## iTRAQ4.116 116.1    iTRAQ4     B
+## iTRAQ4.117 117.1    iTRAQ4     B
+## iTRAQ4.114 114.1    iTRAQ4     A
+## iTRAQ4.115 115.1    iTRAQ4     A
+```
+
+---
+
+## Filtering
+
+
+```r
+msnset %&gt;%
+    filter(ProteinAccession == "BSA") %&gt;% exprs
+```
+
+```
+##     iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117
+## X1   1347.6158  2247.3097  3927.6931  7661.1463
+## X52  1593.4357  2927.4113  5028.2919 10362.1408
+## X53   184.6758   207.8024   515.0558   865.3816
+```
+
+--
+
+
+```r
+msnset %&gt;%
+    filter(group == "A") %&gt;% exprs %&gt;% head(n = 3)
+```
+
+```
+##     iTRAQ4.114 iTRAQ4.115
+## X1   1347.6158  2247.3097
+## X10   739.9861   799.3501
+## X11 27638.3582 33394.0252
+```
+
+--
+
+
+```r
+msnset %&gt;%
+    filter(group == "A") %&gt;%
+    filter(ProteinAccession == "BSA") %&gt;% exprs
+```
+
+```
+##     iTRAQ4.114 iTRAQ4.115
+## X1   1347.6158  2247.3097
+## X52  1593.4357  2927.4113
+## X53   184.6758   207.8024
+```
+
+---
+class: middle
+
+## Grouping
+
+
+```r
+msnset %&gt;%
+    group_by(ProteinAccession) %&gt;% show
+```
+
+```
+## Grouped_eSet (storageMode: lockedEnvironment)
+## assayData: 55 features, 4 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117
+##   varLabels: mz reporters group
+##   varMetadata: labelDescription
+## featureData
+##   featureNames: X1 X10 ... X9 (55 total)
+##   fvarLabels: spectrum ProteinAccession ... collision.energy (15
+##     total)
+##   fvarMetadata: labelDescription
+## experimentData: use 'experimentData(object)'
+## Annotation: No annotation 
+## - - - Processing information - - -
+## Data loaded: Wed May 11 18:54:39 2011 
+## iTRAQ4 quantification by trapezoidation: Wed Apr  1 21:41:53 2015 
+##  MSnbase version: 1.1.22 
+## Groups:
+##   features  ProteinAccession [ 40 ]
+##   samples    [ 0 ]
+```
+
+---
+class: middle
+
+
+```r
+msnset %&gt;%
+    group_by(ProteinAccession) %&gt;%
+    group_by(group) %&gt;%
+    show
+```
+
+```
+## Grouped_eSet (storageMode: lockedEnvironment)
+## assayData: 55 features, 4 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117
+##   varLabels: mz reporters group
+##   varMetadata: labelDescription
+## featureData
+##   featureNames: X1 X10 ... X9 (55 total)
+##   fvarLabels: spectrum ProteinAccession ... collision.energy (15
+##     total)
+##   fvarMetadata: labelDescription
+## experimentData: use 'experimentData(object)'
+## Annotation: No annotation 
+## - - - Processing information - - -
+## Data loaded: Wed May 11 18:54:39 2011 
+## iTRAQ4 quantification by trapezoidation: Wed Apr  1 21:41:53 2015 
+##  MSnbase version: 1.1.22 
+## Groups:
+##   features  ProteinAccession [ 40 ]
+##   samples   group [ 2 ]
+```
+
+---
+class: middle
+
+## Summarise (1)
+
+
+```r
+msnset %&gt;%
+    group_by(group) %&gt;%
+    summarise(mean(exprs, na.rm = TRUE)) %&gt;%
+    exprs %&gt;%
+    head
+```
+
+```
+##              A          B
+## X1   1797.4628  5794.4197
+## X10   769.6681   826.6388
+## X11 30516.1917 29366.5078
+## X12 32763.7954 37451.2196
+## X13 27910.6161 28495.8100
+## X14  6341.1393  6670.0603
+```
+
+---
+class: middle
+
+## Summarise (2)
+
+
+```r
+msnset %&gt;%
+    group_by(ProteinAccession) %&gt;%
+    summarise(max(exprs, na.rm = TRUE)) %&gt;%
+    exprs %&gt;%
+    head
+```
+
+```
+##         iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117
+## BSA       1593.436   2927.411   5028.292  10362.141
+## ECA0172  17593.548  18545.620  19361.837  18328.237
+## ECA0435   9339.079  10509.315  10824.739   9504.388
+## ECA0452   1524.148   1399.897   1547.218   1563.230
+## ECA0469   1157.487   1119.316   1178.141   1100.372
+## ECA0621   1101.062   1124.167   1140.093   1191.805
+```
+
+---
+class: middle
+
+## Summarise (3)
+
+
+```r
+msnset %&gt;%
+    group_by(ProteinAccession) %&gt;%
+    summarise(max(exprs, na.rm = TRUE)) %&gt;%
+    group_by(group) %&gt;%
+    summarise(mean(exprs)) %&gt;%
+    filter(ProteinAccession %in% c('ENO', 'BSA')) %&gt;%
+    exprs
+```
+
+```
+##              A         B
+## BSA   2260.423  7695.216
+## ENO 120931.768 31937.750
+```
 
 ---
 class: middle
@@ -354,9 +626,20 @@ name: laurent-gatto
 ([thomasp85](https://twitter.com/thomasp85/)) for early advice.
 
 
+
 ## Thank you for your attention
 
-### Find the slides [online](https://raw.githack.com/lgatto/2018_12_07_EuroBioc18_Munich/master/tidies-eurobioc18.html).
+&lt;hr/&gt;
+
+
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+
+
+### Slides &lt;br/&gt; &amp;nbsp; [http://bit.ly/tidies-eurobioc18](https://raw.githack.com/lgatto/2018_12_07_EuroBioc18_Munich/master/tidies-eurobioc18.html)
 ]
 
 

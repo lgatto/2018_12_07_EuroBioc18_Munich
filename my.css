@@ -75,3 +75,7 @@ a, a > code {
   width: 60%;
   float: right;
 }
+
+.remark-code, .remark-inline-code {
+    font-size: 75%;
+}
