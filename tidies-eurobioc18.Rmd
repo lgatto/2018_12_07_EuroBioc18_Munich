@@ -2,7 +2,7 @@
 title: "A Grammar of Omics Data Manipulation"
 subtitle: "A tale of two cultures"
 author: "[Laurent Gatto](#laurent-gatto)"
-date: "2018/01/01"
+date: "07 December 2018"
 output:
   xaringan::moon_reader:
     css: ["default", "default-fonts", "my.css"]
@@ -19,7 +19,7 @@ options(htmltools.dir.version = FALSE)
 class: middle
 name: cc-by
 
-### Get the slides at [short URL]().
+### Get the slides at [http://bit.ly/tidies-eurobioc18](http://bit.ly/tidies-eurobioc18).
 
 These slides are available under a **creative common
 [CC-BY license](http://creativecommons.org/licenses/by/4.0/)**. You are
@@ -74,7 +74,7 @@ class: middle
 
 This talk is about
 
-> *tidy data analysis for eSet-type objects* using the `tidies` package
+> *tidy data analysis for eSet-like objects* using the `tidies` package
 
 But see also
 
@@ -83,29 +83,114 @@ But see also
 - [`biobroom`](https://www.bioconductor.org/packages/release/bioc/html/biobroom.html) (see later)
 - and probably more ...
 
+---
+class: middle, center
+
+![eSet architecture](./figs/msnset.png)
 
 ---
 class: middle, center, inverse
 
 ## How to
 
+---
+class: middle
+
+```{r testdata, message = FALSE}
+library("MSnbase")
+data(msnset)
+msnset
+```
 
 ---
 class: middle
 
-Explicitly coercing ... (see vignette).
+```{r labels, message = FALSE}
+msnset$group <- c("A", "A", "B", "B")
+varLabels(msnset)
+fvarLabels(msnset)
+```
 
+---
+class: middle, center, inverse
+
+## Explicitly coercing ...
+
+---
+class: middle
+
+## Extract metadata on the fly (1)
+
+```{r onthefly1}
+library("magrittr")
+library("tibble")
+msnset %>% pData
+```
+
+---
+class: middle
+
+## Extract metadata on the fly (2)
+
+
+```{r onthefly2}
+msnset %>% fData %>% as_tibble
+```
+---
+class: middle
+
+## Using `biobroom` (sample metadata)
+
+```{r biobroom, message = FALSE}
+library("biobroom")
+tidy(msnset, addPheno = TRUE)
+```
+
+---
+class: middle
+
+## Expression and feature data
+
+```{r ms2df, message = FALSE}
+mdf <- MSnbase::ms2df(msnset)
+tibble::as_tibble(mdf)
+```
+
+---
+class: middle
+
+## Gather into a long format
+
+```{r gather, message = FALSE}
+fv <- fvarLabels(msnset)
+lmdf <- tidyr::gather(mdf, sample, exprs, -fv)
+tibble::as_tibble(lmdf)
+```
 
 ---
 class: middle, center, inverse
 
 ## The `tidies` package
 
+## Implicitly coercing ...
 
 ---
 class: middle
 
-Implicitly coercing ... (see vignette).
+- Select feature or sample variables
+- Order data by it feature of sample variables
+- Return features and samples with matching conditions
+- Group by one or more feature or sample variables
+- Summarise the expression values of a dataset
+- Example with plotting
+
+---
+class: middle
+
+## To finish on a ~~positive~~ technical note
+
+![conflicts!](./figs/conflicts.png)
+
 
 ---
 class: middle
@@ -130,9 +215,31 @@ name: laurent-gatto
 
 .rigth-col-50[
 
-**Acknowledgements**: ...
+**Acknowledgements**: Thomas Lin Pedersen
+([thomasp85](https://twitter.com/thomasp85/)) for early advice.
+
 
 ## Thank you for your attention
 
-### Find the slides [online](https://rawgit.com/lgatto/slide-templates/master/my_template.html).
+### Find the slides [online](https://raw.githack.com/lgatto/2018_12_07_EuroBioc18_Munich/master/tidies-eurobioc18.html).
 ]
+
+
+---
+class: middle, center, inverse
+
+## (Nothing fancy) under the hood
+
+---
+class: middle
+
+## Re: S4[MSnSet]-aware dplyr
+
+![Asking about implementation](./figs/thomasp85_impl.png)
+
+---
+class: middle
+
+## Premature optimisation is ...
+
+![Performance](./figs/thomasp85_advice.png)

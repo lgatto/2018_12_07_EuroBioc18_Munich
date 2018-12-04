@@ -4,6 +4,7 @@
     <title>A Grammar of Omics Data Manipulation</title>
     <meta charset="utf-8">
     <meta name="author" content="Laurent Gatto" />
+    <meta name="date" content="2018-12-07" />
     <link href="tidies-eurobioc18_files/remark-css/default.css" rel="stylesheet" />
     <link href="tidies-eurobioc18_files/remark-css/default-fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="my.css" type="text/css" />
@@ -15,7 +16,7 @@ class: center, middle, inverse, title-slide
 # A Grammar of Omics Data Manipulation
 ## A tale of two cultures
 ### <a href="#laurent-gatto">Laurent Gatto</a>
-### 2018/01/01
+### 07 December 2018
 
 ---
 
@@ -25,7 +26,7 @@ class: center, middle, inverse, title-slide
 class: middle
 name: cc-by
 
-### Get the slides at [short URL]().
+### Get the slides at [http://bit.ly/tidies-eurobioc18](http://bit.ly/tidies-eurobioc18).
 
 These slides are available under a **creative common
 [CC-BY license](http://creativecommons.org/licenses/by/4.0/)**. You are
@@ -80,7 +81,7 @@ class: middle
 
 This talk is about
 
-&gt; *tidy data analysis for eSet-type objects* using the `tidies` package
+&gt; *tidy data analysis for eSet-like objects* using the `tidies` package
 
 But see also
 
@@ -89,29 +90,245 @@ But see also
 - [`biobroom`](https://www.bioconductor.org/packages/release/bioc/html/biobroom.html) (see later)
 - and probably more ...
 
+---
+class: middle, center
+
+![eSet architecture](./figs/msnset.png)
 
 ---
 class: middle, center, inverse
 
 ## How to
 
+---
+class: middle
+
+
+```r
+library("MSnbase")
+data(msnset)
+msnset
+```
+
+```
+## MSnSet (storageMode: lockedEnvironment)
+## assayData: 55 features, 4 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117
+##   varLabels: mz reporters
+##   varMetadata: labelDescription
+## featureData
+##   featureNames: X1 X10 ... X9 (55 total)
+##   fvarLabels: spectrum ProteinAccession ... collision.energy (15
+##     total)
+##   fvarMetadata: labelDescription
+## experimentData: use 'experimentData(object)'
+## Annotation: No annotation 
+## - - - Processing information - - -
+## Data loaded: Wed May 11 18:54:39 2011 
+## iTRAQ4 quantification by trapezoidation: Wed Apr  1 21:41:53 2015 
+##  MSnbase version: 1.1.22
+```
 
 ---
 class: middle
 
-Explicitly coercing ... (see vignette).
 
+```r
+msnset$group &lt;- c("A", "A", "B", "B")
+varLabels(msnset)
+```
+
+```
+## [1] "mz"        "reporters" "group"
+```
+
+```r
+fvarLabels(msnset)
+```
+
+```
+##  [1] "spectrum"            "ProteinAccession"    "ProteinDescription" 
+##  [4] "PeptideSequence"     "file"                "retention.time"     
+##  [7] "precursor.mz"        "precursor.intensity" "charge"             
+## [10] "peaks.count"         "tic"                 "ionCount"           
+## [13] "ms.level"            "acquisition.number"  "collision.energy"
+```
+
+---
+class: middle, center, inverse
+
+## Explicitly coercing ...
+
+---
+class: middle
+
+## Extract metadata on the fly (1)
+
+
+```r
+library("magrittr")
+library("tibble")
+msnset %&gt;% pData
+```
+
+```
+##               mz reporters group
+## iTRAQ4.114 114.1    iTRAQ4     A
+## iTRAQ4.115 115.1    iTRAQ4     A
+## iTRAQ4.116 116.1    iTRAQ4     B
+## iTRAQ4.117 117.1    iTRAQ4     B
+```
+
+---
+class: middle
+
+## Extract metadata on the fly (2)
+
+
+
+```r
+msnset %&gt;% fData %&gt;% as_tibble
+```
+
+```
+## # A tibble: 55 x 15
+##    spectrum ProteinAccession ProteinDescript… PeptideSequence  file
+##  *    &lt;int&gt; &lt;fct&gt;            &lt;fct&gt;            &lt;fct&gt;           &lt;int&gt;
+##  1        1 BSA              bovine serum al… NYQEAK              1
+##  2       10 ECA1422          glucose-1-phosp… VTLVDTGEHSMTGGR     1
+##  3       11 ECA4030          50S ribosomal s… SPIWR               1
+##  4       12 ECA3882          chaperone prote… TAIDDALK            1
+##  5       13 ECA1364          succinyl-CoA sy… SILINK              1
+##  6       14 ECA0871          NADP-dependent … DFEVVNNESDPR        1
+##  7       15 ECA4512          ATP synthase be… EGNDFYHEMTDSNV…     1
+##  8       16 ECA4513          ATP synthase ga… VMLQAYDEGR          1
+##  9       17 ECA3969          fumarate reduct… ANAVVLATGGAGR       1
+## 10       18 ECA3082          malate:quinone … VATPEWQSK           1
+## # ... with 45 more rows, and 10 more variables: retention.time &lt;dbl&gt;,
+## #   precursor.mz &lt;dbl&gt;, precursor.intensity &lt;dbl&gt;, charge &lt;int&gt;,
+## #   peaks.count &lt;int&gt;, tic &lt;dbl&gt;, ionCount &lt;dbl&gt;, ms.level &lt;int&gt;,
+## #   acquisition.number &lt;int&gt;, collision.energy &lt;dbl&gt;
+```
+---
+class: middle
+
+## Using `biobroom` (sample metadata)
+
+
+```r
+library("biobroom")
+tidy(msnset, addPheno = TRUE)
+```
+
+```
+## # A tibble: 220 x 6
+##    protein sample        mz reporters group  value
+##    &lt;fct&gt;   &lt;fct&gt;      &lt;dbl&gt; &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt;
+##  1 X1      iTRAQ4.114  114. iTRAQ4    A      1348.
+##  2 X10     iTRAQ4.114  114. iTRAQ4    A       740.
+##  3 X11     iTRAQ4.114  114. iTRAQ4    A     27638.
+##  4 X12     iTRAQ4.114  114. iTRAQ4    A     31893.
+##  5 X13     iTRAQ4.114  114. iTRAQ4    A     26144.
+##  6 X14     iTRAQ4.114  114. iTRAQ4    A      6448.
+##  7 X15     iTRAQ4.114  114. iTRAQ4    A       722.
+##  8 X16     iTRAQ4.114  114. iTRAQ4    A     10155.
+##  9 X17     iTRAQ4.114  114. iTRAQ4    A      2800.
+## 10 X18     iTRAQ4.114  114. iTRAQ4    A      4459.
+## # ... with 210 more rows
+```
+
+---
+class: middle
+
+## Expression and feature data
+
+
+```r
+mdf &lt;- MSnbase::ms2df(msnset)
+tibble::as_tibble(mdf)
+```
+
+```
+## # A tibble: 55 x 19
+##    iTRAQ4.114 iTRAQ4.115 iTRAQ4.116 iTRAQ4.117 spectrum ProteinAccession
+##  *      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;    &lt;int&gt; &lt;fct&gt;           
+##  1      1348.      2247.      3928.      7661.        1 BSA             
+##  2       740.       799.       713.       941.       10 ECA1422         
+##  3     27638.     33394.     32104.     26629.       11 ECA4030         
+##  4     31893.     33635.     37675.     37228.       12 ECA3882         
+##  5     26144.     29677.     29089.     27903.       13 ECA1364         
+##  6      6448.      6234.      6903.      6437.       14 ECA0871         
+##  7       722.      1059.       851.       945.       15 ECA4512         
+##  8     10155.     10487.     11018.     11290.       16 ECA4513         
+##  9      2800.      3245.      2965.      3184.       17 ECA3969         
+## 10      4459.      4787.      4351.      4303.       18 ECA3082         
+## # ... with 45 more rows, and 13 more variables: ProteinDescription &lt;fct&gt;,
+## #   PeptideSequence &lt;fct&gt;, file &lt;int&gt;, retention.time &lt;dbl&gt;,
+## #   precursor.mz &lt;dbl&gt;, precursor.intensity &lt;dbl&gt;, charge &lt;int&gt;,
+## #   peaks.count &lt;int&gt;, tic &lt;dbl&gt;, ionCount &lt;dbl&gt;, ms.level &lt;int&gt;,
+## #   acquisition.number &lt;int&gt;, collision.energy &lt;dbl&gt;
+```
+
+---
+class: middle
+
+## Gather into a long format
+
+
+```r
+fv &lt;- fvarLabels(msnset)
+lmdf &lt;- tidyr::gather(mdf, sample, exprs, -fv)
+tibble::as_tibble(lmdf)
+```
+
+```
+## # A tibble: 220 x 17
+##    spectrum ProteinAccession ProteinDescript… PeptideSequence  file
+##       &lt;int&gt; &lt;fct&gt;            &lt;fct&gt;            &lt;fct&gt;           &lt;int&gt;
+##  1        1 BSA              bovine serum al… NYQEAK              1
+##  2       10 ECA1422          glucose-1-phosp… VTLVDTGEHSMTGGR     1
+##  3       11 ECA4030          50S ribosomal s… SPIWR               1
+##  4       12 ECA3882          chaperone prote… TAIDDALK            1
+##  5       13 ECA1364          succinyl-CoA sy… SILINK              1
+##  6       14 ECA0871          NADP-dependent … DFEVVNNESDPR        1
+##  7       15 ECA4512          ATP synthase be… EGNDFYHEMTDSNV…     1
+##  8       16 ECA4513          ATP synthase ga… VMLQAYDEGR          1
+##  9       17 ECA3969          fumarate reduct… ANAVVLATGGAGR       1
+## 10       18 ECA3082          malate:quinone … VATPEWQSK           1
+## # ... with 210 more rows, and 12 more variables: retention.time &lt;dbl&gt;,
+## #   precursor.mz &lt;dbl&gt;, precursor.intensity &lt;dbl&gt;, charge &lt;int&gt;,
+## #   peaks.count &lt;int&gt;, tic &lt;dbl&gt;, ionCount &lt;dbl&gt;, ms.level &lt;int&gt;,
+## #   acquisition.number &lt;int&gt;, collision.energy &lt;dbl&gt;, sample &lt;chr&gt;,
+## #   exprs &lt;dbl&gt;
+```
 
 ---
 class: middle, center, inverse
 
 ## The `tidies` package
 
+## Implicitly coercing ...
 
 ---
 class: middle
 
-Implicitly coercing ... (see vignette).
+- Select feature or sample variables
+- Order data by it feature of sample variables
+- Return features and samples with matching conditions
+- Group by one or more feature or sample variables
+- Summarise the expression values of a dataset
+- Example with plotting
+
+---
+class: middle
+
+## To finish on a ~~positive~~ technical note
+
+![conflicts!](./figs/conflicts.png)
+
 
 ---
 class: middle
@@ -136,12 +353,34 @@ name: laurent-gatto
 
 .rigth-col-50[
 
-**Acknowledgements**: ...
+**Acknowledgements**: Thomas Lin Pedersen
+([thomasp85](https://twitter.com/thomasp85/)) for early advice.
+
 
 ## Thank you for your attention
 
-### Find the slides [online](https://rawgit.com/lgatto/slide-templates/master/my_template.html).
+### Find the slides [online](https://raw.githack.com/lgatto/2018_12_07_EuroBioc18_Munich/master/tidies-eurobioc18.html).
 ]
+
+
+---
+class: middle, center, inverse
+
+## (Nothing fancy) under the hood
+
+---
+class: middle
+
+## Re: S4[MSnSet]-aware dplyr
+
+![Asking about implementation](./figs/thomasp85_impl.png)
+
+---
+class: middle
+
+## Premature optimisation is ...
+
+![Performance](./figs/thomasp85_advice.png)
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
