@@ -342,14 +342,16 @@ name: laurent-gatto
 <hr/>
 
 
+
 <br/>
 <br/>
 <br/>
 <br/>
 <br/>
 
+### slides <br/> [http://bit.ly/tidies-eurobioc18](https://raw.githack.com/lgatto/2018_12_07_EuroBioc18_Munich/master/tidies-eurobioc18.html)
+### www  <br/> [https://lgatto.github.io/tidies/](https://lgatto.github.io/tidies/)
 
-### Slides <br/> &nbsp; [http://bit.ly/tidies-eurobioc18](https://raw.githack.com/lgatto/2018_12_07_EuroBioc18_Munich/master/tidies-eurobioc18.html)
 ]
 
 
