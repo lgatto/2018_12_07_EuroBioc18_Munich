@@ -1,8 +1,8 @@
 # A Grammar of Omics Data Manipulation - a tale of two cultures
 
-- My talk at [EuroBioc 2018](https://bioconductor.github.io/EuroBioc2018/)
-- When: Fri 7 Dec, 11:15am
-
+- My talk at [EuroBioc 2018](https://bioconductor.github.io/EuroBioc2018/).
+- When: Fri 7 Dec, 11:15am.
+- Read the slides at [http://bit.ly/tidies-eurobioc18](http://bit.ly/tidies-eurobioc18).
 
 
 The idea of two cultures, originally coined by CP Snow referring to
