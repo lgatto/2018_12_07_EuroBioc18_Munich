@@ -32,13 +32,10 @@ any purpose, even commercially
 ---
 class: middle, center, inverse
 
-## Motivation
+## Motivation - a tale of two cultures
 
 
----
-class: middle
-
-## A tale of two cultures
+???
 
 There are numerous complementary views about
 - Object-oriented programming (`S3` vs `S4`; `S4` vs `R5` vs `R6`),
