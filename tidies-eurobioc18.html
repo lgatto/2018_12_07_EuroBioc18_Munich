@@ -301,7 +301,7 @@ tibble::as_tibble(lmdf)
 ## #   exprs &lt;dbl&gt;
 ```
 
-Given that this coercion is often useful, it is implemented in `as_tibble,MSnSet`.
+Given that this coercion is often useful, it is implemented in `as_tibble,eSet`.
 
 ---
 class: middle, center, inverse
@@ -313,13 +313,12 @@ class: middle, center, inverse
 I would argue that none of the solutions demonstrated above are fully
 satisfactory. What we want is
 
-- Compose simple functions with the pipe; here we apply the widely
+- **Compose** simple functions with the pipe; here we apply the widely
   used `dplyr` functions and `magrittr` `%&gt;%` operator.
 
-- Each of the adapted tidy function to use and return tidy `eSet`
-  data.
+- Each of the adapted tidy function to **use and return `eSet`** data.
 
-- Be able to use Bioconductor functionality for these omics data
+- Continue to **use Bioconductor functionality** for these omics data
   types.
 
 ---
@@ -547,24 +546,24 @@ msnset %&gt;%
 ---
 class: middle
 
-## Summarise (2)
+## Summarise (mix &amp; match)
 
 
 ```r
 msnset %&gt;%
-    filterNA() %&gt;%
-    normalise(method = "quantiles") %&gt;%
-    combineFeatures(method = "median", fcol = "ProteinAccession") %&gt;%
+*   filterNA() %&gt;%
+*   combineFeatures(method = "median", fcol = "ProteinAccession") %&gt;%
     group_by(group) %&gt;%
     summarise(mean(exprs)) %&gt;%
+*   normalise(method = "quantiles") %&gt;%
     filter(ProteinAccession %in% c('ENO', 'BSA')) %&gt;%
     exprs
 ```
 
 ```
 ##             A         B
-## BSA  1505.614  4419.924
-## ENO 29157.021 17992.625
+## BSA  1462.295  4355.662
+## ENO 41383.731 11272.133
 ```
 
 ---

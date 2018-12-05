@@ -164,7 +164,7 @@ lmdf <- tidyr::gather(mdf, sample, exprs, -fv)
 tibble::as_tibble(lmdf)
 ```
 
-Given that this coercion is often useful, it is implemented in `as_tibble,MSnSet`.
+Given that this coercion is often useful, it is implemented in `as_tibble,eSet`.
 
 ---
 class: middle, center, inverse
@@ -176,13 +176,12 @@ class: middle, center, inverse
 I would argue that none of the solutions demonstrated above are fully
 satisfactory. What we want is
 
-- Compose simple functions with the pipe; here we apply the widely
+- **Compose** simple functions with the pipe; here we apply the widely
   used `dplyr` functions and `magrittr` `%>%` operator.
 
-- Each of the adapted tidy function to use and return tidy `eSet`
-  data.
+- Each of the adapted tidy function to **use and return `eSet`** data.
 
-- Be able to use Bioconductor functionality for these omics data
+- Continue to **use Bioconductor functionality** for these omics data
   types.
 
 ---
@@ -282,15 +281,15 @@ msnset %>%
 ---
 class: middle
 
-## Summarise (2)
+## Summarise (mix & match)
 
-```{r summarise3}
+```{r summarise3, tidy = FALSE}
 msnset %>%
-    filterNA() %>%
-    normalise(method = "quantiles") %>%
-    combineFeatures(method = "median", fcol = "ProteinAccession") %>%
+    filterNA() %>% #<<
+    combineFeatures(method = "median", fcol = "ProteinAccession") %>% #<<
     group_by(group) %>%
     summarise(mean(exprs)) %>%
+    normalise(method = "quantiles") %>%  #<<
     filter(ProteinAccession %in% c('ENO', 'BSA')) %>%
     exprs
 ```
