@@ -319,6 +319,9 @@ satisfactory. What we want is
 - Each of the adapted tidy function to use and return tidy `eSet`
   data.
 
+- Be able to use Bioconductor functionality for these omics data
+  types.
+
 ---
 
 ## Select variables
@@ -550,8 +553,8 @@ class: middle
 ```r
 msnset %&gt;%
     filterNA() %&gt;%
-    group_by(ProteinAccession) %&gt;%
-    summarise(max(exprs)) %&gt;%
+    normalise(method = "quantiles") %&gt;%
+    combineFeatures(method = "median", fcol = "ProteinAccession") %&gt;%
     group_by(group) %&gt;%
     summarise(mean(exprs)) %&gt;%
     filter(ProteinAccession %in% c('ENO', 'BSA')) %&gt;%
@@ -559,9 +562,9 @@ msnset %&gt;%
 ```
 
 ```
-##              A         B
-## BSA   2260.423  7695.216
-## ENO 120931.768 31937.750
+##             A         B
+## BSA  1505.614  4419.924
+## ENO 29157.021 17992.625
 ```
 
 ---
@@ -633,24 +636,24 @@ name: laurent-gatto
 ]
 
 
----
-class: middle, center, inverse
+&lt;!-- --- --&gt;
+&lt;!-- class: middle, center, inverse --&gt;
 
-## (Nothing fancy) under the hood
+&lt;!-- ## (Nothing fancy) under the hood --&gt;
 
----
-class: middle
+&lt;!-- --- --&gt;
+&lt;!-- class: middle --&gt;
 
-## Re: S4[MSnSet]-aware dplyr
+&lt;!-- ## Re: S4[MSnSet]-aware dplyr --&gt;
 
-![Asking about implementation](./figs/thomasp85_impl.png)
+&lt;!-- ![Asking about implementation](./figs/thomasp85_impl.png) --&gt;
 
----
-class: middle
+&lt;!-- --- --&gt;
+&lt;!-- class: middle --&gt;
 
-## Premature optimisation is ...
+&lt;!-- ## Premature optimisation is ... --&gt;
 
-![Performance](./figs/thomasp85_advice.png)
+&lt;!-- ![Performance](./figs/thomasp85_advice.png) --&gt;
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

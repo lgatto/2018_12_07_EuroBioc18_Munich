@@ -182,6 +182,9 @@ satisfactory. What we want is
 - Each of the adapted tidy function to use and return tidy `eSet`
   data.
 
+- Be able to use Bioconductor functionality for these omics data
+  types.
+
 ---
 
 ## Select variables
@@ -284,8 +287,8 @@ class: middle
 ```{r summarise3}
 msnset %>%
     filterNA() %>%
-    group_by(ProteinAccession) %>%
-    summarise(max(exprs)) %>%
+    normalise(method = "quantiles") %>%
+    combineFeatures(method = "median", fcol = "ProteinAccession") %>%
     group_by(group) %>%
     summarise(mean(exprs)) %>%
     filter(ProteinAccession %in% c('ENO', 'BSA')) %>%
@@ -358,21 +361,21 @@ name: laurent-gatto
 ]
 
 
----
-class: middle, center, inverse
+<!-- --- -->
+<!-- class: middle, center, inverse -->
 
-## (Nothing fancy) under the hood
+<!-- ## (Nothing fancy) under the hood -->
 
----
-class: middle
+<!-- --- -->
+<!-- class: middle -->
 
-## Re: S4[MSnSet]-aware dplyr
+<!-- ## Re: S4[MSnSet]-aware dplyr -->
 
-![Asking about implementation](./figs/thomasp85_impl.png)
+<!-- ![Asking about implementation](./figs/thomasp85_impl.png) -->
 
----
-class: middle
+<!-- --- -->
+<!-- class: middle -->
 
-## Premature optimisation is ...
+<!-- ## Premature optimisation is ... -->
 
-![Performance](./figs/thomasp85_advice.png)
+<!-- ![Performance](./figs/thomasp85_advice.png) -->
