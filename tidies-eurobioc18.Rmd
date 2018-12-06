@@ -96,7 +96,7 @@ class: middle, center
 ---
 class: middle, center, inverse
 
-## How to
+## Demo data
 
 ---
 class: middle
@@ -119,28 +119,13 @@ fvarLabels(msnset)
 ---
 class: middle, center, inverse
 
+## How to
+
+---
+class: middle, center, inverse
+
 ## Explicitly coercing ...
 
----
-class: middle
-
-## Extract metadata on the fly (1)
-
-```{r onthefly1}
-library("magrittr")
-library("tibble")
-msnset %>% pData
-```
-
----
-class: middle
-
-## Extract metadata on the fly (2)
-
-
-```{r onthefly2}
-msnset %>% fData %>% as_tibble
-```
 ---
 class: middle
 
@@ -293,7 +278,7 @@ class: middle
 
 ```{r summarise3, tidy = FALSE}
 msnset %>%
-    filterNA() %>% #<<
+    impute(method = "knn") %>% #<<
     combineFeatures(method = "median", fcol = "ProteinAccession") %>% #<<
     group_by(group) %>%
     summarise(mean(exprs)) %>%
@@ -321,6 +306,10 @@ class: middle
 
 ![conflicts!](./figs/conflicts.png)
 
+???
+
+In addition to `select`, that was mentioned yesterday, `combine` is
+also an irriations.
 
 ---
 class: middle

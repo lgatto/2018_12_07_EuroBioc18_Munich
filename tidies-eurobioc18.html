@@ -102,7 +102,7 @@ class: middle, center
 ---
 class: middle, center, inverse
 
-## How to
+## Demo data
 
 ---
 class: middle
@@ -164,58 +164,13 @@ fvarLabels(msnset)
 ---
 class: middle, center, inverse
 
+## How to
+
+---
+class: middle, center, inverse
+
 ## Explicitly coercing ...
 
----
-class: middle
-
-## Extract metadata on the fly (1)
-
-
-```r
-library("magrittr")
-library("tibble")
-msnset %&gt;% pData
-```
-
-```
-##               mz reporters group
-## iTRAQ4.114 114.1    iTRAQ4     A
-## iTRAQ4.115 115.1    iTRAQ4     A
-## iTRAQ4.116 116.1    iTRAQ4     B
-## iTRAQ4.117 117.1    iTRAQ4     B
-```
-
----
-class: middle
-
-## Extract metadata on the fly (2)
-
-
-
-```r
-msnset %&gt;% fData %&gt;% as_tibble
-```
-
-```
-## # A tibble: 55 x 15
-##    spectrum ProteinAccession ProteinDescript… PeptideSequence  file
-##  *    &lt;int&gt; &lt;fct&gt;            &lt;fct&gt;            &lt;fct&gt;           &lt;int&gt;
-##  1        1 BSA              bovine serum al… NYQEAK              1
-##  2       10 ECA1422          glucose-1-phosp… VTLVDTGEHSMTGGR     1
-##  3       11 ECA4030          50S ribosomal s… SPIWR               1
-##  4       12 ECA3882          chaperone prote… TAIDDALK            1
-##  5       13 ECA1364          succinyl-CoA sy… SILINK              1
-##  6       14 ECA0871          NADP-dependent … DFEVVNNESDPR        1
-##  7       15 ECA4512          ATP synthase be… EGNDFYHEMTDSNV…     1
-##  8       16 ECA4513          ATP synthase ga… VMLQAYDEGR          1
-##  9       17 ECA3969          fumarate reduct… ANAVVLATGGAGR       1
-## 10       18 ECA3082          malate:quinone … VATPEWQSK           1
-## # ... with 45 more rows, and 10 more variables: retention.time &lt;dbl&gt;,
-## #   precursor.mz &lt;dbl&gt;, precursor.intensity &lt;dbl&gt;, charge &lt;int&gt;,
-## #   peaks.count &lt;int&gt;, tic &lt;dbl&gt;, ionCount &lt;dbl&gt;, ms.level &lt;int&gt;,
-## #   acquisition.number &lt;int&gt;, collision.energy &lt;dbl&gt;
-```
 ---
 class: middle
 
@@ -559,7 +514,7 @@ class: middle
 
 ```r
 msnset %&gt;%
-*   filterNA() %&gt;%
+*   impute(method = "knn") %&gt;%
 *   combineFeatures(method = "median", fcol = "ProteinAccession") %&gt;%
     group_by(group) %&gt;%
     summarise(mean(exprs)) %&gt;%
@@ -569,9 +524,9 @@ msnset %&gt;%
 ```
 
 ```
-##             A         B
-## BSA  1462.295  4355.662
-## ENO 41383.731 11272.133
+##             A        B
+## BSA  1462.295 4355.662
+## ENO 34958.892 9115.974
 ```
 
 ---
@@ -596,6 +551,10 @@ class: middle
 
 ![conflicts!](./figs/conflicts.png)
 
+???
+
+In addition to `select`, that was mentioned yesterday, `combine` is
+also an irriations.
 
 ---
 class: middle
