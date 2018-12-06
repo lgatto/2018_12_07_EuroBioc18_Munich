@@ -84,6 +84,14 @@ But see also
 class: middle, center
 
 ![eSet architecture](./figs/msnset.png)
+<!-- ![sce architecture](./figs/sce_class.png) -->
+
+???
+
+- the assay data contains the quantiative/expression data
+- a tabular data contains the feature meta-data: `rowData`, `rowRanges`, `featureData`
+- a tabular data contains the sample meta-data: `colData`, `phenoData`
+
 
 ---
 class: middle, center, inverse
