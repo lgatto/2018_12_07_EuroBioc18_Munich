@@ -278,7 +278,7 @@ class: middle
 
 ```{r summarise3, tidy = FALSE}
 msnset %>%
-    impute(method = "knn") %>% #<<
+    impute(method = "bpca") %>% #<<
     combineFeatures(method = "median", fcol = "ProteinAccession") %>% #<<
     group_by(group) %>%
     summarise(mean(exprs)) %>%

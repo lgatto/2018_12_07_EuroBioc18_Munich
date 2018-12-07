@@ -514,7 +514,7 @@ class: middle
 
 ```r
 msnset %&gt;%
-*   impute(method = "knn") %&gt;%
+*   impute(method = "bpca") %&gt;%
 *   combineFeatures(method = "median", fcol = "ProteinAccession") %&gt;%
     group_by(group) %&gt;%
     summarise(mean(exprs)) %&gt;%
@@ -526,7 +526,7 @@ msnset %&gt;%
 ```
 ##             A        B
 ## BSA  1462.295 4355.662
-## ENO 34958.892 9115.974
+## ENO 34958.892 8992.143
 ```
 
 ---
